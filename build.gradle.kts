@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.spotbugs.snom.SpotBugsTask
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
@@ -55,10 +54,19 @@ repositories {
             includeGroup("com.github.CrimsonWarpedcraft")
         }
     }
+
+    maven {
+        name = "codemc-releases"
+        url = uri("https://repo.codemc.io/repository/maven-releases/")
+        content {
+            includeGroup("com.github.retrooper")
+        }
+    }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.72-stable")
+    compileOnly("com.github.retrooper:packetevents-spigot:2.13.0")
 }
 
 tasks.processResources {
@@ -70,26 +78,6 @@ tasks.processResources {
 val shadowJar = tasks.named<ShadowJar>("shadowJar") {
     archiveClassifier.set("")
     mergeServiceFiles()
-    relocate("dev.jorel.commandapi", "${project.group}.commandapi")
-    relocate("com.fasterxml", "${project.group}.fasterxml")
-    relocate("org.yaml.snakeyaml", "${project.group}.snakeyaml")
-    relocate("org.hibernate.validator", "${project.group}.hibernatevalidator")
-    relocate("jakarta.validation", "${project.group}.jakartavalidation")
-    relocate("org.jboss.logging", "${project.group}.jbosslogging")
-    // These libs load classes via reflection or SPI and must not be minimized
-    minimize {
-        exclude(dependency("dev.jorel:commandapi-paper-shade:.*"))
-        exclude(dependency("com.fasterxml.jackson.core:.*:.*"))
-        exclude(dependency("com.fasterxml.jackson.dataformat:.*:.*"))
-        exclude(dependency("com.fasterxml:classmate:.*"))
-        exclude(dependency("org.hibernate.validator:.*:.*"))
-        exclude(dependency("jakarta.validation:.*:.*"))
-        exclude(dependency("org.yaml:snakeyaml:.*"))
-        exclude(dependency("org.jboss.logging:.*:.*"))
-        // cw-commons bundles the SQLite JDBC driver (loaded via SPI) inside its own jar;
-        // it never appears as a separate resolvable dependency, so it must be excluded by name.
-        exclude(dependency("com.github.CrimsonWarpedcraft:cw-commons:.*"))
-    }
 }
 
 tasks.jar {
