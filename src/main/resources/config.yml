@@ -1,0 +1,5 @@
+knockback:
+  # Multiplier applied to the horizontal (X/Z) component of combat knockback.
+  horizontal-multiplier: 1.0
+  # Multiplier applied to the vertical (Y) component of combat knockback.
+  vertical-multiplier: 1.0

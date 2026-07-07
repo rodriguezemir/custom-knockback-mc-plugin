@@ -4,3 +4,15 @@ version: "${VERSION}"
 api-version: "26.1.2"
 author: zvolcan
 description: "A custom knockback plugin for PaperMC"
+
+dependencies:
+  server:
+    packetevents:
+      load: BEFORE
+      required: true
+      join-classpath: true
+
+permissions:
+  customkb.command.knockback:
+    description: "Allows changing the custom knockback multipliers."
+    default: op
