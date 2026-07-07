@@ -1,0 +1,6 @@
+main: "site.zvolcan.customkb.Main"
+name: "CustomKB"
+version: "${VERSION}"
+api-version: "26.1.2"
+author: zvolcan
+description: "A custom knockback plugin for PaperMC"

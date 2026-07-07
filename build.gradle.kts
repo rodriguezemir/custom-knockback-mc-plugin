@@ -5,13 +5,11 @@ import java.util.Date
 import java.util.TimeZone
 
 plugins {
-    checkstyle
-    id("com.github.spotbugs") version "6.5.8"
     id("com.gradleup.shadow") version "9.4.3"
     java
 }
 
-group = "com.crimsonwarpedcraft.exampleplugin"
+group = "site.zvolcan.customkb"
 
 fun getTime(): String {
     val sdf = SimpleDateFormat("yyMMdd-HHmm")
@@ -59,66 +57,13 @@ repositories {
     }
 }
 
-val mockitoAgent = configurations.create("mockitoAgent")
-
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.2.build.72-stable")
-
-    // Code quality and unit testing. Not required for code functionality.
-    compileOnly("com.github.spotbugs:spotbugs-annotations:4.10.2")
-    spotbugsPlugins("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
-    testCompileOnly("com.github.spotbugs:spotbugs-annotations:4.10.2")
-    testImplementation("io.papermc.paper:paper-api:26.1.2.build.72-stable")
-    testImplementation("org.junit.jupiter:junit-jupiter:6.1.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.1")
-
-    // Example dependencies. Paper plugins do not require these libraries.
-    implementation("com.github.CrimsonWarpedcraft:cw-commons:v0.1.1")
-    // PluginConfig imports annotations from Jackson and Hibernate Validator directly.
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.0")
-    implementation("dev.jorel:commandapi-paper-shade:11.2.0")
-    implementation("org.hibernate.validator:hibernate-validator:9.1.1.Final")
-
-    testImplementation("org.mockito:mockito-core:5.23.0")
-    mockitoAgent("org.mockito:mockito-core:5.23.0") { isTransitive = false }
-}
-
-tasks.test {
-    useJUnitPlatform()
-    jvmArgs("-javaagent:${mockitoAgent.asPath}")
 }
 
 tasks.processResources {
-    filesMatching("**/plugin.yml") {
+    filesMatching("**/paper-plugin.yml") {
         expand(mapOf("NAME" to rootProject.name, "VERSION" to version, "PACKAGE" to project.group))
-    }
-}
-
-checkstyle {
-    toolVersion = "13.6.0"
-    maxWarnings = 0
-}
-
-configurations.named("checkstyle") {
-    resolutionStrategy.capabilitiesResolution
-        .withCapability("com.google.collections:google-collections") {
-            select("com.google.guava:guava:23.0")
-        }
-}
-
-tasks.withType<Checkstyle>().configureEach {
-    reports {
-        xml.required.set(false)
-        html.required.set(true)
-    }
-}
-
-tasks.withType<SpotBugsTask>().configureEach {
-    reports.create("html") {
-        required.set(true)
-    }
-    reports.create("xml") {
-        required.set(false)
     }
 }
 
